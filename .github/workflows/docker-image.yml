@@ -20,7 +20,7 @@ jobs:
       id: build_database_image
       working-directory: t1-database
       run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/todo-database:stable -t ${{ secrets.DOCKER_USERNAME }}/todo-database:$(git rev-parse HEAD) .
+        sudo docker build -t ${{ secrets.DOCKER_USERNAME }}/todo-database:stable -t ${{ secrets.DOCKER_USERNAME }}/todo-database:$(git rev-parse HEAD) .
 
   build_backend:
     runs-on: self-hosted
@@ -32,7 +32,7 @@ jobs:
       id: build_backend_image
       working-directory: t2-backend
       run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/todo-backend:stable -t ${{ secrets.DOCKER_USERNAME }}/todo-backend:$(git rev-parse HEAD) .
+        sudo docker build -t ${{ secrets.DOCKER_USERNAME }}/todo-backend:stable -t ${{ secrets.DOCKER_USERNAME }}/todo-backend:$(git rev-parse HEAD) .
 
   build_frontend:
     runs-on: self-hosted
@@ -45,7 +45,7 @@ jobs:
       id: build_frontend_image
       working-directory: t3-frontend
       run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/todo-frontend:stable -t ${{ secrets.DOCKER_USERNAME }}/todo-frontend:$(git rev-parse HEAD) .
+        sudo docker build -t ${{ secrets.DOCKER_USERNAME }}/todo-frontend:stable -t ${{ secrets.DOCKER_USERNAME }}/todo-frontend:$(git rev-parse HEAD) .
         
   list_images:
     runs-on: self-hosted
