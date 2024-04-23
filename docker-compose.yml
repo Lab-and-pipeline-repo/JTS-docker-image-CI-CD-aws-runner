@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+  db:
+    image: subash729/todo-database:stable 
+    container_name: tododb-container
+    ports:
+      - "5432:5432"
+    networks:
+      bridge-subas:
+        ipv4_address: 172.30.0.2
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+
+  backend:
+    image: subash729/todo-backend:stable 
+    container_name: todobackend-container
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    networks:
+      bridge-subas:
+        ipv4_address: 172.30.0.3
+    env_file: t2-backend/.env  # Add this line to use the backend .env file
+
+  frontend:
+    image: subash729/todo-frontend:stable 
+    container_name: todofrontend-container
+    ports:
+      - "5173:5173"
+    networks:
+      bridge-subas:
+        ipv4_address: 172.30.0.4
+
+networks:
+  bridge-subas:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.30.0.0/24
+
+

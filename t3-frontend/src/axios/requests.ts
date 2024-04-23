@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Todo, TodoForm } from '../interfaces/todoInterface';
 
 const api = axios.create({
-  baseURL: 'http://192.168.140.140:3000/todo',
+  baseURL: 'http://172.30.0.3:3000/todo',
 });
 
 export const getAllTodos = async (): Promise<Todo[]> => {

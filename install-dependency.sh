@@ -9,6 +9,9 @@ if grep -q 'Amazon Linux 2' /etc/os-release; then
     sudo systemctl start docker
     sudo systemctl enable docker
     echo "Docker service started and enabled"
+    sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+    sudo chmod +x /usr/local/bin/docker-compose
+
 elif grep -q 'Amazon Linux 3' /etc/os-release; then
     # Amazon Linux 3
     echo "Detected Amazon Linux 3"
@@ -18,6 +21,8 @@ elif grep -q 'Amazon Linux 3' /etc/os-release; then
     sudo systemctl start docker
     sudo systemctl enable docker
     echo "Docker service started and enabled"
+    sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+    sudo chmod +x /usr/local/bin/docker-compose
 elif grep -q 'Ubuntu' /etc/os-release; then
     # Ubuntu
     echo "Detected Ubuntu"
