@@ -1,1 +1,1 @@
-# JTS-docker-image-CI-CD-aws-runner
+# JTS-docker-image-create-and-push
