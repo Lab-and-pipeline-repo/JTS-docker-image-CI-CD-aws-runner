@@ -4,7 +4,7 @@ if grep -q 'Amazon Linux 2' /etc/os-release; then
     # Amazon Linux 2
     echo "Detected Amazon Linux 2"
     sudo yum update -y
-    yes | sudo amazon-linux-extras install docker
+    sudo amazon-linux-extras install docker
     echo "Docker installed successfully"
     sudo systemctl start docker
     sudo systemctl enable docker
@@ -36,6 +36,30 @@ elif grep -q 'Ubuntu' /etc/os-release; then
     sudo systemctl start docker
     sudo systemctl enable docker
     echo "Docker service started and enabled"
+else
+    echo "Unsupported Linux distribution"
+    exit 1
+fi
+
+if grep -q 'Amazon Linux 2' /etc/os-release; then
+    # Amazon Linux 2
+    echo "Installing Git on Amazon Linux 2"
+    yes | sudo yum install -y git
+    git version
+    
+elif grep -q 'Amazon Linux 3' /etc/os-release; then
+    # Amazon Linux 2
+    echo "Installing Git on Amazon Linux 3"
+    yes | sudo yum install -y git
+    git version
+    
+elif grep -q 'Ubuntu' /etc/os-release; then
+    # Ubuntu
+    echo "Detected Ubuntu"
+    sudo add-apt-repository -y ppa:git-core/ppa
+    sudo apt-get update 
+    yes | sudo apt-get install -y git
+    git --version
 else
     echo "Unsupported Linux distribution"
     exit 1
