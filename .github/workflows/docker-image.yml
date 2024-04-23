@@ -24,8 +24,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          chmod +x install-dependency.sh
-          ./install-dependency.sh
+          chmod +x install-update.sh
+          ./install-update.sh
 
   build_database:
     runs-on: self-hosted
