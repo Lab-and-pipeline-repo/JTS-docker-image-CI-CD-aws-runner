@@ -55,7 +55,7 @@ jobs:
     steps:
     - name: List Docker images
       run: |
-        docker images
+       sudo docker images
 
   push_images:
     runs-on: self-hosted
@@ -70,22 +70,22 @@ jobs:
       env:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+      run: sudo docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
 
     - name: Push Database Docker images
       run: |
-        docker push ${{ secrets.DOCKER_USERNAME }}/todo-database:stable
-        docker push ${{ secrets.DOCKER_USERNAME }}/todo-database:$(git rev-parse HEAD)
+        sudo  docker push ${{ secrets.DOCKER_USERNAME }}/todo-database:stable
+        sudo  docker push ${{ secrets.DOCKER_USERNAME }}/todo-database:$(git rev-parse HEAD)
 
     - name: Push Backend Docker images
       run: |
-        docker push ${{ secrets.DOCKER_USERNAME }}/todo-backend:stable
-        docker push ${{ secrets.DOCKER_USERNAME }}/todo-backend:$(git rev-parse HEAD)
+        sudo  docker push ${{ secrets.DOCKER_USERNAME }}/todo-backend:stable
+        sudo  docker push ${{ secrets.DOCKER_USERNAME }}/todo-backend:$(git rev-parse HEAD)
 
     - name: Push Frontend Docker images
       run: |
-        docker push ${{ secrets.DOCKER_USERNAME }}/todo-frontend:stable
-        docker push ${{ secrets.DOCKER_USERNAME }}/todo-frontend:$(git rev-parse HEAD)
+        sudo  docker push ${{ secrets.DOCKER_USERNAME }}/todo-frontend:stable
+        sudo  docker push ${{ secrets.DOCKER_USERNAME }}/todo-frontend:$(git rev-parse HEAD)
 
     - name: Logout from Docker Hub
       run: docker logout
