@@ -1,0 +1,1 @@
+# JTS-docker-image-CI-CD-aws-runner
