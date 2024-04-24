@@ -21,7 +21,7 @@ sudo docker run  -itd --name tododb-container -e POSTGRES_USER=subash  -e POSTGR
 sleep 15
 # Start container Backend
 echo "==creating backend container===="
-sudo docker run -itd --name todoback-container --network=bridge-subas-script-172.30.0.0-sl-24 --ip 172.30.0.3  --env-file ~/secret/.env -p 3000:3000 subash729/todo-backend:stable
+sudo docker run -itd --name todoback-container --network=bridge-subas-script-172.30.0.0-sl-24 --ip 172.30.0.3  --env-file /home/ec2-user/secret/.env -p 3000:3000 subash729/todo-backend:stable
 
 # Start container front
 echo "==creating frontend container===="
