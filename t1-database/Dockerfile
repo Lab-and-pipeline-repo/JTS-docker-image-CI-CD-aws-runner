@@ -25,6 +25,3 @@ RUN chmod +x /execute_init_sql.sh
 
 # Set custom entry point
 ENTRYPOINT ["/execute_init_sql.sh"]
-
-# Set default command to run PostgreSQL
-CMD ["postgres"]
