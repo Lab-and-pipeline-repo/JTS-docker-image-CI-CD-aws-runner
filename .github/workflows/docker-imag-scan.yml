@@ -1,0 +1,150 @@
+name: Docker Build 3-tier image CI/CD
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  install_dependencies:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: listing content
+        working-directory: scripts  
+        run: 
+         ls -al
+
+      - name: Install dependencies
+        working-directory: scripts  
+        run: |
+          chmod +x install-dependency.sh
+          ./install-dependency.sh
+
+  build_database:
+    runs-on: self-hosted
+    needs: install_dependencies
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Build database Docker image
+        id: build_database_image
+        working-directory: t1-database
+        run: |
+          sudo docker build -t ${{ secrets.DOCKER_USERNAME }}/todo-database:stable -t ${{ secrets.DOCKER_USERNAME }}/todo-database:$(git rev-parse HEAD) .
+
+  build_backend:
+    runs-on: self-hosted
+    needs: install_dependencies
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Build backend Docker image
+        id: build_backend_image
+        working-directory: t2-backend
+        run: |
+          sudo docker build -t ${{ secrets.DOCKER_USERNAME }}/todo-backend:stable -t ${{ secrets.DOCKER_USERNAME }}/todo-backend:$(git rev-parse HEAD) .
+
+  build_frontend:
+    runs-on: self-hosted
+    needs: install_dependencies
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Build frontend Docker image
+        id: build_frontend_image
+        working-directory: t3-frontend
+        run: |
+          sudo docker build -t ${{ secrets.DOCKER_USERNAME }}/todo-frontend:stable -t ${{ secrets.DOCKER_USERNAME }}/todo-frontend:$(git rev-parse HEAD) .
+        
+  list_images:
+    runs-on: self-hosted
+    needs: [build_database, build_backend, build_frontend]
+    outputs:
+      stdout: ${{ steps.build_database_image.outputs.stdout }}${{ steps.build_backend_image.outputs.stdout }}${{ steps.build_frontend_image.outputs.stdout }}
+    steps:
+      - name: List Docker images
+        run: |
+          sudo docker images
+
+  scan_images:
+    runs-on: self-hosted
+    needs: list_images
+    steps:
+      - name: Install Trivy
+        run: |
+          wget https://github.com/aquasecurity/trivy/releases/download/v0.20.0/trivy_0.20.0_Linux-64bit.tar.gz
+          tar zxvf trivy_0.20.0_Linux-64bit.tar.gz
+          sudo mv trivy /usr/local/bin
+
+      - name: Create directory for scan images
+        run: mkdir -p /home/subash/ec2-user/scan-images
+
+      - name: Scan Database Docker images
+        if: ${{ needs.list_images.outputs.stdout contains 'todo-database' }}
+        run: |
+          sudo trivy ${{ secrets.DOCKER_USERNAME }}/todo-database:stable > /home/subash/ec2-user/scan-images/database_scan-$(git rev-parse HEAD)-$(date +'%Y-%m-%d_%H-%M').txt
+
+      - name: Scan Backend Docker images
+        if: ${{ needs.list_images.outputs.stdout contains 'todo-backend' }}
+        run: |
+          sudo trivy ${{ secrets.DOCKER_USERNAME }}/todo-backend:stable > /home/subash/ec2-user/scan-images/backend_scan-$(git rev-parse HEAD)-$(date +'%Y-%m-%d_%H-%M').txt
+
+      - name: Scan Frontend Docker images
+        if: ${{ needs.list_images.outputs.stdout contains 'todo-frontend' }}
+        run: |
+          sudo trivy ${{ secrets.DOCKER_USERNAME }}/todo-frontend:stable > /home/subash/ec2-user/scan-images/frontend_scan-$(git rev-parse HEAD)-$(date +'%Y-%m-%d_%H-%M').txt
+
+  deploy:
+    needs: [build_database, build_backend, build_frontend]
+    runs-on: self-hosted
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Deploy using Docker Compose
+        working-directory: scripts
+        run: |
+          ls  -al
+          chmod +x spawn_container.sh
+          sudo ./spawn_container.sh
+
+  push_images:
+    runs-on: self-hosted
+    needs: [deploy]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Login to Docker Hub
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: sudo docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+      
+      - name: Push Database Docker images
+        run: |
+          sudo docker push ${{ secrets.DOCKER_USERNAME }}/todo-database:stable
+          sudo docker push ${{ secrets.DOCKER_USERNAME }}/todo-database:$(git rev-parse HEAD)
+      
+      - name: Push Backend Docker images
+        run: |
+          sudo docker push ${{ secrets.DOCKER_USERNAME }}/todo-backend:stable
+          sudo docker push ${{ secrets.DOCKER_USERNAME }}/todo-backend:$(git rev-parse HEAD)
+      
+      - name: Push Frontend Docker images
+        run: |
+          sudo docker push ${{ secrets.DOCKER_USERNAME }}/todo-frontend:stable
+          sudo docker push ${{ secrets.DOCKER_USERNAME }}/todo-frontend:$(git rev-parse HEAD)
+      
+      - name: Logout from Docker Hub
+        run: docker logout
