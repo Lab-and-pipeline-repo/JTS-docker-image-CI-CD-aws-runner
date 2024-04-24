@@ -19,7 +19,9 @@ if grep -q 'Amazon Linux 2' /etc/os-release || grep -q 'Amazon Linux 3' /etc/os-
     # Amazon Linux 2 or Amazon Linux 3
     print_separator
     echo "Detected Amazon Linux"
+    sudo amazon-linux-extras install epel -y
     sudo yum -y install figlet
+
 elif grep -q 'Ubuntu' /etc/os-release; then
     # Ubuntu
     print_separator
@@ -142,6 +144,13 @@ if grep -q 'Ubuntu' /etc/os-release; then
     echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
     sudo apt-get update
     sudo apt-get install -y trivy
+    trivy image --download-db-only
+
+elif grep -q 'Amazon Linux 2' /etc/os-release || grep -q 'Amazon Linux 3' /etc/os-release; then
+    # Amazon Linux 2 and 3
+    echo "Installing Git on Amazon Linux 2"
+    wget https://github.com/aquasecurity/trivy/releases/download/v0.50.2/trivy_0.50.2_Linux-64bit.rpm
+    sudo yum localinstall -y trivy_0.50.2_Linux-64bit.rpm
     trivy image --download-db-only
 
 elif grep -qEi 'redhat|centos' /etc/os-release; then
