@@ -22,6 +22,7 @@ jobs:
          ls -al
 
       - name: Install dependencies
+        working-directory: scripts  
         run: |
           chmod +x install-update.sh
           ./install-update.sh
