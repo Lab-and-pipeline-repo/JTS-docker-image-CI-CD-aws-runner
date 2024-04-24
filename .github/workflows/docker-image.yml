@@ -75,7 +75,7 @@ jobs:
           sudo docker images
 
   deploy:
-    needs: [list_images]
+    needs: [build_database, build_backend, build_frontend]
     runs-on: self-hosted
     steps:
       - name: Checkout code
@@ -90,7 +90,7 @@ jobs:
 
   push_images:
     runs-on: self-hosted
-    needs: [list_images]
+    needs: [deploy]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
