@@ -13,12 +13,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-
-
       - name: Checkout code
         uses: actions/checkout@v3
 
       - name: listing content
+        working-directory: scripts  
         run: 
          ls -al
 

@@ -4,7 +4,7 @@ if grep -q 'Amazon Linux 2' /etc/os-release; then
     # Amazon Linux 2
     echo "Detected Amazon Linux 2"
     sudo yum update -y
-    sudo amazon-linux-extras install docker
+    yes | sudo amazon-linux-extras install docker
     echo "Docker installed successfully"
     sudo systemctl start docker
     sudo systemctl enable docker
