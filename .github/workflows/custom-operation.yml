@@ -37,8 +37,6 @@ jobs:
             whoami
             sudo chmod +x spawn_container.sh
             sudo ./spawn_container.sh
-
-
   delete-container:
     if: github.event.inputs.environment == 'delete-container'
     runs-on: self-hosted

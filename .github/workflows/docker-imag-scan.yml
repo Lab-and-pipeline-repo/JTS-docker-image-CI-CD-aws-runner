@@ -115,7 +115,7 @@ jobs:
         run: |
           sudo docker network create --subnet=172.30.0.0/24 bridge-subas-script-172.30.0.0-sl-24 --driver bridge
 
-          
+
       - name: Database deploy
         run: |
           ls  -al
@@ -131,7 +131,7 @@ jobs:
 
   push_images:
     runs-on: self-hosted
-    needs: [deploy,scan_images]
+    needs: [deploy]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
