@@ -83,7 +83,8 @@ jobs:
       - name: Create directory for scan images
         run: |
             sudo mkdir -p /home/ec2-user/scan-images
-            ls -al /home/ec2-user/
+            sudo ls -al /home/ec2-user/
+            sudo chmod -R +777 /home/ec2-user/scan-images
 
       - name: Scan Database Docker images
         run: |
