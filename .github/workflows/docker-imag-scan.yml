@@ -80,27 +80,18 @@ jobs:
     runs-on: self-hosted
     needs: list_images
     steps:
-      - name: Install Trivy
-        run: |
-          wget https://github.com/aquasecurity/trivy/releases/download/v0.20.0/trivy_0.20.0_Linux-64bit.tar.gz
-          tar zxvf trivy_0.20.0_Linux-64bit.tar.gz
-          sudo mv trivy /usr/local/bin
-
       - name: Create directory for scan images
         run: mkdir -p /home/subash/ec2-user/scan-images
 
       - name: Scan Database Docker images
-        if: ${{ needs.list_images.outputs.stdout contains 'todo-database' }}
         run: |
           sudo trivy ${{ secrets.DOCKER_USERNAME }}/todo-database:stable > /home/subash/ec2-user/scan-images/database_scan-$(git rev-parse HEAD)-$(date +'%Y-%m-%d_%H-%M').txt
 
       - name: Scan Backend Docker images
-        if: ${{ needs.list_images.outputs.stdout contains 'todo-backend' }}
         run: |
           sudo trivy ${{ secrets.DOCKER_USERNAME }}/todo-backend:stable > /home/subash/ec2-user/scan-images/backend_scan-$(git rev-parse HEAD)-$(date +'%Y-%m-%d_%H-%M').txt
 
       - name: Scan Frontend Docker images
-        if: ${{ needs.list_images.outputs.stdout contains 'todo-frontend' }}
         run: |
           sudo trivy ${{ secrets.DOCKER_USERNAME }}/todo-frontend:stable > /home/subash/ec2-user/scan-images/frontend_scan-$(git rev-parse HEAD)-$(date +'%Y-%m-%d_%H-%M').txt
 
