@@ -29,6 +29,6 @@ sudo docker run -itd --name todofront-container --network=bridge-subas-script-17
 
 echo " "
 echo " "
-echo "Containers spawned successfully! and list is"
+echo "Containers spawned successfully! and list is:\n"
 echo "======================"
 sudo docker ps -a
