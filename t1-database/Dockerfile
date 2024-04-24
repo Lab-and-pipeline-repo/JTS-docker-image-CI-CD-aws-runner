@@ -19,6 +19,12 @@ RUN mkdir -p /docker-entrypoint-initdb.d
 # Copy SQL script to create table
 COPY init.sql /docker-entrypoint-initdb.d/
 
-# Create table and insert initial data
-RUN chmod +x /docker-entrypoint-initdb.d/init.sql
+# Copy entry point script
+COPY execute_init_sql.sh /execute_init_sql.sh
+RUN chmod +x /execute_init_sql.sh
 
+# Set custom entry point
+ENTRYPOINT ["/execute_init_sql.sh"]
+
+# Set default command to run PostgreSQL
+CMD ["postgres"]
