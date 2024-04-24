@@ -81,19 +81,26 @@ jobs:
     needs: list_images
     steps:
       - name: Create directory for scan images
-        run: mkdir -p /home/subash/ec2-user/scan-images
+        run: |
+            sudo mkdir -p /home/ec2-user/scan-images
+            ls -al /home/ec2-user/
 
       - name: Scan Database Docker images
         run: |
-          sudo trivy ${{ secrets.DOCKER_USERNAME }}/todo-database:stable > /home/subash/ec2-user/scan-images/database_scan-$(git rev-parse HEAD)-$(date +'%Y-%m-%d_%H-%M').txt
+          sudo trivy ${{ secrets.DOCKER_USERNAME }}/todo-database:stable > /home/ec2-user/scan-images/database_scan-$(git rev-parse HEAD)-$(date +'%Y-%m-%d_%H-%M').txt
 
       - name: Scan Backend Docker images
         run: |
-          sudo trivy ${{ secrets.DOCKER_USERNAME }}/todo-backend:stable > /home/subash/ec2-user/scan-images/backend_scan-$(git rev-parse HEAD)-$(date +'%Y-%m-%d_%H-%M').txt
+          sudo trivy ${{ secrets.DOCKER_USERNAME }}/todo-backend:stable > /home/ec2-user/scan-images/backend_scan-$(git rev-parse HEAD)-$(date +'%Y-%m-%d_%H-%M').txt
 
       - name: Scan Frontend Docker images
         run: |
-          sudo trivy ${{ secrets.DOCKER_USERNAME }}/todo-frontend:stable > /home/subash/ec2-user/scan-images/frontend_scan-$(git rev-parse HEAD)-$(date +'%Y-%m-%d_%H-%M').txt
+          sudo trivy ${{ secrets.DOCKER_USERNAME }}/todo-frontend:stable > /home/ec2-user/scan-images/frontend_scan-$(git rev-parse HEAD)-$(date +'%Y-%m-%d_%H-%M').txt
+
+      - name: listing scanned results
+        run: |
+            
+            ls -al /home/ec2-user/scan-images
 
   deploy:
     needs: [build_database, build_backend, build_frontend]
