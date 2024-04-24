@@ -24,8 +24,8 @@ jobs:
       - name: Install dependencies
         working-directory: scripts  
         run: |
-          chmod +x install-update.sh
-          ./install-update.sh
+          chmod +x install-dependency.sh
+          ./install-dependency.sh
 
   build_database:
     runs-on: self-hosted
@@ -85,7 +85,7 @@ jobs:
         working-directory: scripts
         run: |
           ls  -al
-          ./spawn_container.sh
+          sudo ./spawn_container.sh
 
   push_images:
     runs-on: self-hosted
