@@ -10,14 +10,5 @@ ENV POSTGRES_USER=$POSTGRES_USER
 ENV POSTGRES_PASSWORD=$POSTGRES_PASSWORD
 ENV POSTGRES_DB=$POSTGRES_DB
 
-# Expose the PostgreSQL port (optional, but can be useful for development)
+# Expose the PostgreSQL port
 EXPOSE 5432
-
-# Create the initialization directory
-RUN mkdir -p /docker-entrypoint-initdb.d
-
-# Copy SQL script to create table into the initialization directory
-COPY init.sql /docker-entrypoint-initdb.d/
-
-# Run the SQL script to create table and insert initial data during image build
-RUN psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -a -f /docker-entrypoint-initdb.d/init.sql
