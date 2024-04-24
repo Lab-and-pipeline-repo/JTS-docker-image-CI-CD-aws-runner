@@ -19,9 +19,9 @@ RUN mkdir -p /docker-entrypoint-initdb.d
 # Copy SQL script to create table
 COPY init.sql /docker-entrypoint-initdb.d/
 
-# Copy entry point script
-COPY execute_init_sql.sh /execute_init_sql.sh
-RUN chmod +x /execute_init_sql.sh
+# Copy entrypoint script
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
-# Set custom entry point
-ENTRYPOINT ["/execute_init_sql.sh"]
+# Set custom entrypoint script
+ENTRYPOINT ["/entrypoint.sh"]
