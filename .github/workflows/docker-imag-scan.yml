@@ -113,6 +113,12 @@ jobs:
       - name: Deploy using Docker Compose
         working-directory: scripts
         run: |
+          chmod +x kill.sh
+          sudo ./kill.sh
+
+      - name: Deploy using Docker Compose
+        working-directory: scripts
+        run: |
           ls  -al
           chmod +x spawn_container.sh
           sudo ./spawn_container.sh
