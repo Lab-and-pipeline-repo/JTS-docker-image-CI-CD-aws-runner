@@ -90,7 +90,7 @@ jobs:
 
   push_images:
     runs-on: self-hosted
-    needs: [deploy,list_images]
+    needs: [deploy]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
