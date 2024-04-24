@@ -85,6 +85,7 @@ jobs:
         working-directory: scripts
         run: |
           ls  -al
+          chmod +x spawn_container.sh
           sudo ./spawn_container.sh
 
   push_images:

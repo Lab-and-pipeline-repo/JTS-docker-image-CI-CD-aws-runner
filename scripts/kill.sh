@@ -5,6 +5,7 @@ sudo docker  ps -a
 echo " "
 echo " "
 
+
 # Start container database
 echo "==Removing database container===="
 sudo docker stop tododb-container 
@@ -26,3 +27,7 @@ echo " "
 echo "Containers killed successfully!and list is"
 echo "======================"
 sudo docker ps -a
+
+# Removing network bridge
+echo "Removing bridge adapter  bridge-subas-script-172.30.0.0-sl-24"
+sudo docker network rm bridge-subas-script-172.30.0.0-sl-24
